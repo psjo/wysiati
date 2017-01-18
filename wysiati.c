@@ -2,11 +2,13 @@
 #include <locale.h>
 #include <stdint.h>
 
+// GLOBALS
 static const WINDOW *w;
 static int row;
 static int col;
 static int upper = 1;
 
+// the mover
 static void mover(int y, int x) {
         int posx, posy;
 
@@ -29,7 +31,8 @@ static void mover(int y, int x) {
         move(y, x);
 }
 
-static void capitalprint(uint64_t c) {
+// the printer
+static void printer(uint64_t c) {
         if (upper && c >= 'a' && c <= 'z')
                 printw("%c", c-32);
         else
@@ -86,8 +89,7 @@ static int looping(void)
 			break;
 		default:
                         quitter = 0;
-                        capitalprint(ch);
-			//printw("0x%lx", ch);
+                        printer(ch);
 		}
 		
 		refresh();			/* Print it on to the real screen */
@@ -103,11 +105,11 @@ int main()
 	raw();				/* Line buffering disabled	*/
 	keypad(stdscr, TRUE);		/* We get F1, F2 etc..		*/
 	noecho();			/* Don't echo() while we do getch */
-	curs_set(1);        /* cursor wiz */
-        getmaxyx(w, row, col);
+	curs_set(1);                    /* cursor wiz */
+        getmaxyx(w, row, col);          /* get screen size */
 
-	//printw("\twysiati (F10 to exit)%d %d\n", row, col);
-	looping();
+	//printw("\twysiati (F10*5 + 'q' to exit)%d %d\n", row, col);
+	looping();                      /* get input */
 	endwin();			/* End curses mode		  */
 	
 	return 0;
