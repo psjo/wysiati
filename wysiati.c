@@ -20,11 +20,11 @@ static void mover(int y, int x) {
                 y -= 1;
                 x = col - 1;
         } else if (x == col) {
-                x = x%col;
+                x = 0;
                 y += 1;
         }
         if (y == row) {
-                y = y%row;
+                y = 0;
         } else if (y < 0)
                 y = row - 1;
 
