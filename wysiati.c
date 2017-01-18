@@ -1,11 +1,11 @@
 #include <ncurses.h>
-//#include <stdio.h>
 #include <locale.h>
 #include <stdint.h>
 
 static const WINDOW *w;
 static int row;
 static int col;
+static int upper = 1;
 
 static void mover(int y, int x) {
         int posx, posy;
@@ -13,6 +13,7 @@ static void mover(int y, int x) {
         getyx(w, posy, posx);
         x += posx;
         y += posy;
+
         if (x < 0) {
                 y -= 1;
                 x = col - 1;
@@ -26,11 +27,10 @@ static void mover(int y, int x) {
                 y = row - 1;
 
         move(y, x);
-        //printw("%d %d", posx, posy);
 }
 
 static void capitalprint(uint64_t c) {
-        if (c >= 'a' && c <= 'z')
+        if (upper && c >= 'a' && c <= 'z')
                 printw("%c", c-32);
         else
                 printw("%c", c);
@@ -47,17 +47,23 @@ static void capitalprint(uint64_t c) {
 static int looping(void)
 {
 	uint64_t ch;
-	
+	int quitter = 0;
+
 	for (;;) {
 		
 		ch = getch();
 		switch (ch)
 		{	
-		case KEY_F(10): // EXIT
-			return 0;
+		case KEY_F(10): // EXIT SEQUENCE INITIATED
+                        quitter++;
+                        if (quitter > 4 && getch() == 'q')
+			        return 0;
 			break;	
-		case KEY_F(1): // clear
+		case KEY_F(1): // clear screen
                         clear();
+			break;	
+		case KEY_F(9): // toggle uppercase
+                        upper ^= 1;
 			break;	
 		case KEY_LEFT:
 		        mover(0, -1);	
@@ -72,24 +78,21 @@ static int looping(void)
 			mover(1, 0);
 			break;
 		case 8:                         // different backspaces
-                case 263:
+                case 263:                       // crappy delete
 		case 127:
 			printw("%c", 8);
 			printw(" ");
 			printw("%c", 8);
 			break;
 		default:
+                        quitter = 0;
                         capitalprint(ch);
-			//attron(A_BOLD);
 			//printw("0x%lx", ch);
-			//attroff(A_BOLD);
 		}
 		
 		refresh();			/* Print it on to the real screen */
 	}
 	
-	//getch();			/* Wait for user input */
-
 	return 1;
 }
 

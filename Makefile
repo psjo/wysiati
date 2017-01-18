@@ -1,6 +1,6 @@
 CC = cc
 LIBS = -lncursesw
-CFLAGS = -std=c99 -pedantic -Wall -g
+CFLAGS = -std=c99 -pedantic -Wall
 LDFLAGS = -s ${LIBS}
 SRC = wysiati.c
 OBJ = ${SRC:.c=.o}
