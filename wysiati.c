@@ -83,9 +83,11 @@ static int looping(void)
 		case 8:                         // different backspaces
                 case 263:                       // crappy delete
 		case 127:
-			printw("%c", 8);
+			mover(0, -1);
+			//printw("%c", 8);
 			printw(" ");
-			printw("%c", 8);
+			//printw("%c", 8);
+			mover(0, -1);
 			break;
 		default:
                         quitter = 0;
@@ -108,7 +110,7 @@ int main()
 	curs_set(1);                    /* cursor wiz */
         getmaxyx(w, row, col);          /* get screen size */
 
-	//printw("\twysiati (F10*5 + 'q' to exit)%d %d\n", row, col);
+	printw("\tMOA ANNERÅS JONZÉN"); // (F10*5 + 'q' to exit)%d %d\n", row, col);
 	looping();                      /* get input */
 	endwin();			/* End curses mode		  */
 	
